@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hardened Network Services Implementation | Portfolio</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eef2f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1f2937;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+
+    section.card {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      border-left: 6px solid #0078ff;
+      transition: transform 0.3s ease;
+    }
+
+    section.card:hover {
+      transform: translateY(-3px);
+    }
+
+    h2 {
+      color: #0078ff;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+    }
+
+    h3 {
+      color: #1f2937;
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    ul {
+      margin-left: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .project-files ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    a.btn {
+      display: inline-block;
+      margin: 1rem 0.5rem 0 0;
+      padding: 0.65rem 1.2rem;
+      background-color: #0078ff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-weight: 500;
+    }
+
+    a.btn:hover {
+      background-color: #005fcc;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    code {
+      background-color: #f3f4f6;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
+
+    video {
+      border-radius: 8px;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hardened Network Services Implementation</h1>
+  </header>
+
+  <main>    
+    <section class="card">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Deployed and secured DHCP, DNS, and Print Services as part of enterprise infrastructure expansion, emphasizing role hardening and access control.</li>
+        <li>Configured authorized DHCP servers in Active Directory to prevent rogue DHCP attacks and enabled audit logging for scope changes and lease events.</li>
+        <li>Created secure DNS zones with “Secure Only” dynamic updates and DNSSEC validation to mitigate cache poisoning and unauthorized record injection.</li>
+        <li>Implemented RBAC-based printer access controls, hardened Print Spooler service against PrintNightmare exploits, and enforced GPO-based restrictions on remote calls.</li>
+        <li>Used PowerShell, MMC, and WAC for deployment verification and comparative analysis of security posture, auditability, and administrative efficiency.</li>
+        <li>Delivered a hardened, auditable network services stack aligned with Active Directory-integrated security and Microsoft’s Secure Baseline for Windows Server roles.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h3>Environment & Tools</h3>
+      <ul>
+        <li>Windows Server 2022</li>
+        <li>PowerShell</li>
+        <li>Microsoft Management Console (MMC)</li>
+        <li>Windows Admin Center (WAC)</li>
+        <li>DHCP, DNS, Print Services</li>
+        <li>Active Directory Security Baselines</li>
+      </ul>
+    </section>
+
+    <section class="card project-files">
+      <h3>Project Files & Demonstration</h3>
+      <ul>
+        <li><a href="../../projects/PROJECT5/Secure Infrastructure Deployment/Final Report.pdf" target="_blank" class="btn">Technical Report (PDF)</a></li>
+        <li>
+          <video controls>
+            <source src="../../projects/PROJECT5/Secure Infrastructure Deployment/Lab4_Video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </li>
+      </ul>
+    </section>
+
+    <div style="margin-bottom: 2rem;">
+      <a href="../../index.html" class="btn">← Back to Portfolio</a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Mahimaa Vardini BR. All Rights Reserved.
+  </footer>
+</body>
+</html>
