@@ -3,150 +3,439 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INVESTIGATION OF A COMPROMISED VM</title>
-  <link rel="stylesheet" href="../../assets/css/main.css">
+  <title>Digital Forensics Investigation | Mahimaa Vardini BR</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #eef2f7;
-      color: #333;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-darker: #050810;
+      --accent-cyan: #00f5ff;
+      --accent-purple: #b537ff;
+      --accent-green: #39ff14;
+      --text-primary: #e0e6ed;
+      --text-secondary: #8892a6;
+      --card-bg: rgba(20, 25, 40, 0.9);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-darker);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridScroll 20s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes gridScroll {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    /* Terminal Header */
     header {
-      background-color: #1f2937;
-      color: #fff;
-      padding: 2rem 1rem;
+      position: relative;
+      background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(181, 55, 255, 0.1));
+      border-bottom: 2px solid var(--accent-cyan);
+      padding: 3rem 5%;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      letter-spacing: 1px;
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+      animation: scan 3s infinite;
     }
 
+    @keyframes scan {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    .terminal-text {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      animation: slideDown 0.8s ease-out;
+    }
+
+    /* Back Button */
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      padding: 0.8rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 50px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-button:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-dark);
+      transform: translateX(-5px);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+    }
+
+    /* Main Content */
     main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
+      position: relative;
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 5%;
+      z-index: 1;
     }
 
-    section.card {
-      background-color: #fff;
-      padding: 2rem;
+    /* Card Sections */
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 245, 255, 0.2);
       border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      padding: 2.5rem;
       margin-bottom: 2rem;
-      border-left: 6px solid #0078ff;
-      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: cardSlideIn 0.6s ease-out forwards;
+      position: relative;
+      overflow: hidden;
     }
 
-    section.card:hover {
-      transform: translateY(-3px);
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    }
+
+    @keyframes cardSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .project-card:nth-child(2) { animation-delay: 0.1s; }
+    .project-card:nth-child(3) { animation-delay: 0.2s; }
+    .project-card:nth-child(4) { animation-delay: 0.3s; }
+    .project-card:nth-child(5) { animation-delay: 0.4s; }
+
+    .project-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 40px rgba(0, 245, 255, 0.2);
+      transform: translateY(-5px);
     }
 
     h2 {
-      color: #0078ff;
-      margin-bottom: 1rem;
-      font-size: 1.6rem;
+      color: var(--accent-cyan);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 10px var(--accent-cyan));
     }
 
     h3 {
-      color: #1f2937;
+      color: var(--accent-purple);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
       margin-top: 1.5rem;
-      margin-bottom: 0.8rem;
     }
 
     ul {
-      margin-left: 1.5rem;
-      line-height: 1.7;
+      list-style: none;
+      margin-left: 0;
     }
 
-    .project-files ul li {
-      margin-bottom: 0.5rem;
+    ul li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
     }
 
-    a.btn {
-      display: inline-block;
-      margin: 1rem 0.5rem 0 0;
-      padding: 0.65rem 1.2rem;
-      background-color: #0078ff;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s ease, transform 0.2s ease;
-      font-weight: 500;
+    ul li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-size: 1.5rem;
+      line-height: 1.8;
     }
 
-    a.btn:hover {
-      background-color: #005fcc;
-      transform: translateY(-2px);
+    /* Tech Stack Badges */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
 
-    footer {
+    .tech-badge {
+      background: rgba(0, 245, 255, 0.1);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
       text-align: center;
-      padding: 1.5rem;
-      color: #777;
-      font-size: 0.9rem;
-      margin-top: 3rem;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .tech-badge:hover {
+      background: rgba(0, 245, 255, 0.2);
+      border-color: var(--accent-cyan);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
+    }
+
+    .tech-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
     }
 
     code {
-      background-color: #f3f4f6;
-      padding: 0.2rem 0.4rem;
+      background: rgba(181, 55, 255, 0.2);
+      color: var(--accent-purple);
+      padding: 0.2rem 0.6rem;
       border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.95rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(181, 55, 255, 0.3);
     }
 
+    /* Download Button */
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 245, 255, 0.5);
+    }
+
+    .download-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(0, 245, 255, 0.1);
+      margin-top: 3rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .project-card { padding: 1.5rem; }
+      .back-button { 
+        position: static;
+        display: block;
+        width: fit-content;
+        margin: 1rem auto;
+      }
+    }
+
+    /* Glow Effect */
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px var(--accent-cyan); }
+      50% { box-shadow: 0 0 20px var(--accent-cyan), 0 0 30px var(--accent-cyan); }
+    }
   </style>
 </head>
 <body>
+  <div class="bg-grid"></div>
+
+  <a href="../../index.html" class="back-button">← Back to Portfolio</a>
+
   <header>
-    <h1>INVESTIGATING A COMPROMISED VM</h1>
+    <div class="terminal-text">> forensics_investigation.exe --target compromised_vm</div>
+    <h1>Digital Forensics Investigation</h1>
+    <p class="subtitle">Compromised Windows VM Analysis</p>
   </header>
 
-  <main>    
-    <section class="card">
-      <h2>What I Did</h2>
+  <main>
+    <div class="project-card">
+      <h2><span class="section-icon">🔍</span>Investigation Overview</h2>
+      <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 1.5rem;">
+        Conducted a comprehensive forensic analysis of a Windows virtual machine compromised through PowerShell-based FTP exfiltration scripts. This investigation traced the full attack lifecycle from initial compromise to data exfiltration.
+      </p>
+      
+      <h3>Key Findings & Actions</h3>
       <ul>
-        <li>Conducted a full-scale forensic analysis of a Windows virtual machine compromised via PowerShell-based FTP exfiltration scripts.</li>
-        <li>Identified malicious persistence mechanisms through registry key modifications (<code>RunOnce</code>) and Windows Task Scheduler manipulations ensuring attacker foothold post-reboot.</li>
-        <li>Performed deep packet inspection in Wireshark to trace data exfiltration channels and validated FTP credential misuse.</li>
-        <li>Applied steganographic analysis to extract potential hidden payloads within image files using Steghide and brute-force passphrase attacks.</li>
-        <li>Compiled evidence artifacts and drafted a forensic chain of custody report with mitigation strategies including network segmentation, privilege minimization, and firewall rule enforcement.</li>
+        <li>Conducted full-scale forensic analysis of a Windows virtual machine compromised via PowerShell-based FTP exfiltration scripts</li>
+        <li>Identified malicious persistence mechanisms through registry key modifications (<code>RunOnce</code>) and Windows Task Scheduler manipulations ensuring attacker foothold post-reboot</li>
+        <li>Performed deep packet inspection in Wireshark to trace data exfiltration channels and validated FTP credential misuse</li>
+        <li>Applied steganographic analysis to extract potential hidden payloads within image files using Steghide and brute-force passphrase attacks</li>
+        <li>Compiled evidence artifacts and drafted a forensic chain of custody report with mitigation strategies including network segmentation, privilege minimization, and firewall rule enforcement</li>
       </ul>
-    </section>
+    </div>
 
-    <section class="card">
-      <h3>Technologies Used</h3>
+    <div class="project-card">
+      <h2><span class="section-icon">🛠️</span>Technologies & Tools</h2>
+      <div class="tech-grid">
+        <div class="tech-badge">
+          <span class="tech-icon">📊</span>
+          <strong>FTK Imager</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">🔍</span>
+          <strong>Wireshark</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">🔬</span>
+          <strong>Autopsy</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">🖼️</span>
+          <strong>Steghide</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">📁</span>
+          <strong>FileZilla</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">📝</span>
+          <strong>Notepad++</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <h2><span class="section-icon">🎯</span>Attack Vector Analysis</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        The compromise involved a multi-stage attack leveraging PowerShell for initial access and FTP for data exfiltration:
+      </p>
       <ul>
-        <li>FTK Imager</li>
-        <li>Wireshark</li>
-        <li>Autopsy</li>
-        <li>Steghide</li>
-        <li>FileZilla</li>
-        <li>Notepad++</li>
+        <li><strong>Initial Access:</strong> PowerShell scripts executed with elevated privileges</li>
+        <li><strong>Persistence:</strong> Registry modifications and scheduled tasks for reboot survival</li>
+        <li><strong>Exfiltration:</strong> FTP protocol used to transfer sensitive data to attacker-controlled servers</li>
+        <li><strong>Steganography:</strong> Hidden payloads embedded in image files to avoid detection</li>
       </ul>
-    </section>
+    </div>
 
-    <section class="card project-files">
-      <h3>Project Files</h3>
+    <div class="project-card">
+      <h2><span class="section-icon">🛡️</span>Mitigation Strategies</h2>
       <ul>
-        <li><a href="../../projects/PROJECT1/Report.pdf" target="_blank" class="btn">Forensic Report (PDF)</a></li>
+        <li><strong>Network Segmentation:</strong> Isolate critical systems from general network access</li>
+        <li><strong>Privilege Minimization:</strong> Implement least-privilege access controls across all user accounts</li>
+        <li><strong>Firewall Rules:</strong> Enforce strict egress filtering to prevent unauthorized data transfers</li>
+        <li><strong>PowerShell Logging:</strong> Enable comprehensive script block logging and monitoring</li>
+        <li><strong>File Integrity Monitoring:</strong> Deploy real-time monitoring for unauthorized file modifications</li>
       </ul>
-    </section>
+    </div>
 
-    <div style="margin-bottom: 2rem;">
-      <a href="../../index.html" class="btn">← Back to Portfolio</a>
+    <div class="project-card">
+      <h2><span class="section-icon">📄</span>Project Documentation</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Access the complete forensic report detailing the investigation methodology, findings, evidence chain of custody, and comprehensive mitigation recommendations.
+      </p>
+      <a href="../../projects/PROJECT1/Report.pdf" target="_blank" class="download-btn">
+        <span class="download-icon">📥</span>
+        Download Forensic Report (PDF)
+      </a>
     </div>
   </main>
 
   <footer>
-    &copy; 2025 Mahimaa Vardini BR. All Rights Reserved.
+    &copy; <span id="year"></span> Mahimaa Vardini BR. All Rights Reserved.
   </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Add stagger animation to list items
+    document.querySelectorAll('ul li').forEach((li, index) => {
+      li.style.opacity = '0';
+      li.style.animation = `fadeIn 0.5s ease-out ${index * 0.05}s forwards`;
+    });
+  </script>
 </body>
 </html>
