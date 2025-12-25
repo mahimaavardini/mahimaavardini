@@ -232,6 +232,51 @@
             transform: translateY(0);
         }
         
+        /* Filter Buttons */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.3s forwards;
+        }
+        
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.4);
+        }
+        
+        .filter-icon {
+            font-size: 1.2rem;
+        }
+        
         /* Projects Grid */
         .projects-grid {
             display: grid;
@@ -251,6 +296,10 @@
             transform: translateY(50px);
             cursor: pointer;
             position: relative;
+        }
+        
+        .project-card.hidden {
+            display: none;
         }
         
         .project-card.visible {
@@ -478,6 +527,13 @@
             .typing-text { font-size: 1.2rem; }
             .nav-links { display: none; }
             .projects-grid { grid-template-columns: 1fr; }
+            .filter-container {
+                gap: 0.5rem;
+            }
+            .filter-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -506,58 +562,78 @@
     
     <section id="projects">
         <h2 class="section-title scroll-reveal">Featured Projects</h2>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">
+                <span class="filter-icon">🎯</span> All Projects
+            </button>
+            <button class="filter-btn" data-filter="forensics">
+                <span class="filter-icon">🔍</span> Forensics
+            </button>
+            <button class="filter-btn" data-filter="research">
+                <span class="filter-icon">🧠</span> Research
+            </button>
+            <button class="filter-btn" data-filter="infrastructure">
+                <span class="filter-icon">🏗️</span> Infrastructure
+            </button>
+            <button class="filter-btn" data-filter="administration">
+                <span class="filter-icon">🖥️</span> Administration
+            </button>
+        </div>
+        
         <div class="projects-grid">
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="forensics">
                 <img src="images/DigitalForensics.jpg" alt="Digital Forensics" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Digital Forensics Investigation</h3>
                     <p class="project-desc">End-to-end forensic analysis of a compromised VM to trace PowerShell-based data exfiltration via FTP using FTK Imager, Wireshark, and Steghide.</p>
-                    <a href="projects/PROJECT1/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT1/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
             
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="research">
                 <img src="images/AISecurity.jpg" alt="AI Security" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">AI Security Research</h3>
                     <p class="project-desc">Defensive architectures against generative AI exploitation with NIST-aligned frameworks and real-time threat intelligence integration.</p>
-                    <a href="projects/PROJECT2/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT2/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
             
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="infrastructure">
                 <img src="images/SecurityProtocol.png" alt="Network Security" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Network Security Protocol Analysis</h3>
                     <p class="project-desc">Secure network performance framework with IEEE 802.x protocol assessment and topology simulations for resilience evaluation.</p>
-                    <a href="projects/PROJECT3/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT3/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
             
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="administration">
                 <img src="images/SecureRemote.png" alt="Remote Administration" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Secure Remote Administration</h3>
                     <p class="project-desc">Windows Server administration framework with PowerShell Remoting, encrypted sessions, and least-privilege access controls.</p>
-                    <a href="projects/PROJECT4/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT4/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
             
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="infrastructure">
                 <img src="images/Infrastructure.jpg" alt="Infrastructure" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Secure Infrastructure Deployment</h3>
                     <p class="project-desc">DHCP, DNS & Print Services configuration with AD authorization, DNSSEC, and layered security controls against common threats.</p>
-                    <a href="projects/PROJECT5/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT5/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
             
-            <div class="project-card scroll-reveal">
+            <div class="project-card scroll-reveal" data-category="administration">
                 <img src="images/ActiveDirectory.png" alt="Active Directory" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Active Directory Hardening</h3>
                     <p class="project-desc">Compliant AD environment with enforced password policies, RBAC-based group management, and fully auditable least-privilege access model.</p>
-                    <a href="projects/PROJECT6/index.html" class="special" target="_blank" rel="noopener noreferrer">Learn More →</a>
+                    <a href="projects/PROJECT6/index.html" class="project-link" target="_blank" rel="noopener noreferrer">Learn More →</a>
                 </div>
             </div>
         </div>
@@ -707,6 +783,39 @@
         
         // Year Update
         document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Project Filtering
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Filter projects with animation
+                projectCards.forEach((card, index) => {
+                    const category = card.getAttribute('data-category');
+                    
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(50px)';
+                        setTimeout(() => {
+                            card.classList.add('hidden');
+                        }, 400);
+                    }
+                });
+            });
+        });
         
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
