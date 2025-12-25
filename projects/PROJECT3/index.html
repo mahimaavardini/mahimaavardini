@@ -3,147 +3,386 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Networking Infrastructure & Security Analysis | Portfolio</title>
-  <link rel="stylesheet" href="../../assets/css/main.css">
+  <title>Networking Infrastructure & Security | Mahimaa Vardini BR</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #eef2f7;
-      color: #333;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-darker: #050810;
+      --accent-cyan: #00f5ff;
+      --accent-purple: #b537ff;
+      --accent-green: #39ff14;
+      --text-primary: #e0e6ed;
+      --text-secondary: #8892a6;
+      --card-bg: rgba(20, 25, 40, 0.9);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-darker);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridScroll 20s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes gridScroll {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
     }
 
     header {
-      background-color: #1f2937;
-      color: #fff;
-      padding: 2rem 1rem;
+      position: relative;
+      background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(181, 55, 255, 0.1));
+      border-bottom: 2px solid var(--accent-cyan);
+      padding: 3rem 5%;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      letter-spacing: 1px;
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+      animation: scan 3s infinite;
+    }
+
+    @keyframes scan {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    .terminal-text {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      animation: slideDown 0.8s ease-out;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      padding: 0.8rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 50px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-button:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-dark);
+      transform: translateX(-5px);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
     }
 
     main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
+      position: relative;
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 5%;
+      z-index: 1;
     }
 
-    section.card {
-      background-color: #fff;
-      padding: 2rem;
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 245, 255, 0.2);
       border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      padding: 2.5rem;
       margin-bottom: 2rem;
-      border-left: 6px solid #0078ff;
-      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: cardSlideIn 0.6s ease-out forwards;
+      position: relative;
+      overflow: hidden;
     }
 
-    section.card:hover {
-      transform: translateY(-3px);
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    }
+
+    @keyframes cardSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .project-card:nth-child(2) { animation-delay: 0.1s; }
+    .project-card:nth-child(3) { animation-delay: 0.2s; }
+    .project-card:nth-child(4) { animation-delay: 0.3s; }
+
+    .project-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 40px rgba(0, 245, 255, 0.2);
+      transform: translateY(-5px);
     }
 
     h2 {
-      color: #0078ff;
-      margin-bottom: 1rem;
-      font-size: 1.6rem;
+      color: var(--accent-cyan);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 10px var(--accent-cyan));
     }
 
     h3 {
-      color: #1f2937;
+      color: var(--accent-purple);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
       margin-top: 1.5rem;
-      margin-bottom: 0.8rem;
     }
 
     ul {
-      margin-left: 1.5rem;
-      line-height: 1.7;
+      list-style: none;
+      margin-left: 0;
     }
 
-    .project-files ul li {
+    ul li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    ul li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-size: 1.5rem;
+      line-height: 1.8;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .tech-badge {
+      background: rgba(0, 245, 255, 0.1);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .tech-badge:hover {
+      background: rgba(0, 245, 255, 0.2);
+      border-color: var(--accent-cyan);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
+    }
+
+    .tech-icon {
+      font-size: 2rem;
       margin-bottom: 0.5rem;
+      display: block;
     }
 
-    a.btn {
-      display: inline-block;
-      margin: 1rem 0.5rem 0 0;
-      padding: 0.65rem 1.2rem;
-      background-color: #0078ff;
-      color: #fff;
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
       text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s ease, transform 0.2s ease;
-      font-weight: 500;
+      border-radius: 50px;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
     }
 
-    a.btn:hover {
-      background-color: #005fcc;
-      transform: translateY(-2px);
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 245, 255, 0.5);
+    }
+
+    .download-icon {
+      font-size: 1.2rem;
     }
 
     footer {
       text-align: center;
-      padding: 1.5rem;
-      color: #777;
-      font-size: 0.9rem;
+      padding: 2rem;
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(0, 245, 255, 0.1);
       margin-top: 3rem;
     }
 
-    code {
-      background-color: #f3f4f6;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.95rem;
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .project-card { padding: 1.5rem; }
+      .back-button { 
+        position: static;
+        display: block;
+        width: fit-content;
+        margin: 1rem auto;
+      }
     }
-
   </style>
 </head>
 <body>
+  <div class="bg-grid"></div>
+
+  <a href="../../index.html" class="back-button">← Back to Portfolio</a>
+
   <header>
-    <h1>Networking Infrastructure & Security Analysis</h1>
+    <div class="terminal-text">> network_analyzer.py --scan topology --assess protocols</div>
+    <h1>Network Infrastructure & Security</h1>
+    <p class="subtitle">Protocol Analysis & Topology Design</p>
   </header>
 
-  <main>    
-    <section class="card">
-      <h2>Analysis & Contributions</h2>
+  <main>
+    <div class="project-card">
+      <h2><span class="section-icon">🌐</span>Analysis & Contributions</h2>
       <ul>
-        <li>Performed comparative analysis of circuit vs. packet-switched networks, highlighting implications for throughput optimization and congestion management in secure communication systems.</li>
-        <li>Examined the 802.x IEEE suite to assess network-layer vulnerabilities and wireless access controls, focusing on WPA2/WPA3 standards and port-based authentication (802.1X).</li>
-        <li>Designed logical network topology simulations (Star, Bus, Mesh, Ring) to evaluate resilience, redundancy, and latency trade-offs in enterprise settings.</li>
-        <li>Authored a comprehensive technical report emphasizing protocol-layer interactions, encryption dependencies, and secure data transmission architectures across multi-layered networks.</li>
+        <li>Performed comparative analysis of circuit vs. packet-switched networks, highlighting implications for throughput optimization and congestion management in secure communication systems</li>
+        <li>Examined the 802.x IEEE suite to assess network-layer vulnerabilities and wireless access controls, focusing on WPA2/WPA3 standards and port-based authentication (802.1X)</li>
+        <li>Designed logical network topology simulations (Star, Bus, Mesh, Ring) to evaluate resilience, redundancy, and latency trade-offs in enterprise settings</li>
+        <li>Authored a comprehensive technical report emphasizing protocol-layer interactions, encryption dependencies, and secure data transmission architectures across multi-layered networks</li>
       </ul>
-    </section>
+    </div>
 
-    <section class="card">
-      <h3>Focus Areas & Standards</h3>
+    <div class="project-card">
+      <h2><span class="section-icon">🔧</span>Focus Areas & Standards</h2>
+      <div class="tech-grid">
+        <div class="tech-badge">
+          <span class="tech-icon">📊</span>
+          <strong>OSI Model</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">📡</span>
+          <strong>IEEE 802 Standards</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">🔗</span>
+          <strong>Network Topologies</strong>
+        </div>
+        <div class="tech-badge">
+          <span class="tech-icon">⚡</span>
+          <strong>Switching Mechanisms</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <h2><span class="section-icon">🎯</span>Topology Analysis</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Comparative evaluation of enterprise network topologies for security and performance optimization:
+      </p>
       <ul>
-        <li>OSI Model</li>
-        <li>IEEE 802 Standards</li>
-        <li>Network Topologies (Star, Bus, Mesh, Ring)</li>
-        <li>Switching Mechanisms & Secure Data Transmission</li>
+        <li><strong>Star Topology:</strong> Centralized management with single point of failure mitigation strategies</li>
+        <li><strong>Bus Topology:</strong> Collision domain analysis and bandwidth optimization techniques</li>
+        <li><strong>Mesh Topology:</strong> High redundancy with distributed routing for mission-critical systems</li>
+        <li><strong>Ring Topology:</strong> Token-based access control and deterministic performance characteristics</li>
       </ul>
-    </section>
+    </div>
 
-    <section class="card project-files">
-      <h3>Project Files</h3>
-      <ul>
-        <li><a href="../../projects/PROJECT3/FundamentalsOfNetworking.pdf" target="_blank" class="btn">Research Paper (PDF)</a></li>
-      </ul>
-    </section>
-
-    <div style="margin-bottom: 2rem;">
-      <a href="../../index.html" class="btn">← Back to Portfolio</a>
+    <div class="project-card">
+      <h2><span class="section-icon">📄</span>Project Documentation</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Access the complete research paper detailing network architecture analysis, security protocol evaluation, and topology design recommendations.
+      </p>
+      <a href="../../projects/PROJECT3/FundamentalsOfNetworking.pdf" target="_blank" class="download-btn">
+        <span class="download-icon">📥</span>
+        Download Research Paper (PDF)
+      </a>
     </div>
   </main>
 
   <footer>
-    &copy; 2025 Mahimaa Vardini BR. All Rights Reserved.
+    &copy; <span id="year"></span> Mahimaa Vardini BR. All Rights Reserved.
   </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.querySelectorAll('ul li').forEach((li, index) => {
+      li.style.opacity = '0';
+      li.style.animation = `fadeIn 0.5s ease-out ${index * 0.05}s forwards`;
+    });
+  </script>
 </body>
 </html>
